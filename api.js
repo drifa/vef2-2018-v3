@@ -13,9 +13,14 @@ const router = express.Router();
 
 router.get('/', async (req, res) => {
   res.send('HELLO WORLD')
-  await db.query("INSERT INTO Notes(datetime, title, text) VALUES(CURRENT_TIMESTAMP, 'Yo', 'What's kicking')");
-  let result = await db.query('SELECT * FROM Notes;')
-  res.send(result);
+  try {
+    await db.query("INSERT INTO Notes(datetime, title, text) VALUES(CURRENT_TIMESTAMP, 'Yo', 'What's kicking')");
+    let result = await db.query('SELECT * FROM Notes;')
+    res.send(result);
+  } catch (err) {
+    res.send(err);
+  }
+
 });
 
 function catchErrors(fn) {
