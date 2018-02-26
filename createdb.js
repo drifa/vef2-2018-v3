@@ -29,14 +29,10 @@ exports.query = async function query(q) {
   }
 }
 
-async function create() {
+exports.create = async function create() {
   const data = await readFileAsync(schemaFile);
 
   await query(data.toString('utf-8'));
 
   console.info('Schema created');
 }
-
-create().catch((err) => {
-  console.error('Error creating schema', err);
-});

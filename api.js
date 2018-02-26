@@ -1,6 +1,10 @@
 const express = require('express');
 const db = require('./createdb');
 
+db.create().catch((err) => {
+  console.error('Error creating schema', err);
+});
+
 db.query("INSERT INTO Notes(datetime, title, text) VALUES(CURRENT_TIMESTAMP, 'Yo', 'What's kicking')");
 
 const {
