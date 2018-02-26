@@ -1,6 +1,4 @@
-/* todo sækja pakka sem vantar  */
-
-const connectionString = process.env.DATABASE_URL;
+const db = require('./database');
 
 /**
  * Create a note asynchronously.
@@ -13,7 +11,10 @@ const connectionString = process.env.DATABASE_URL;
  * @returns {Promise} Promise representing the object result of creating the note
  */
 async function create({ title, text, datetime } = {}) {
-  /* todo útfæra */
+  const query = 'INSERT INTO Notes(datetime, title, text) VALUES($1::timestamp, $2::string, $3::string);';
+  const params = [ datetime, title, text ];
+  let results = await db.runSQL(query, params);
+  return results;
 }
 
 /**
@@ -22,7 +23,10 @@ async function create({ title, text, datetime } = {}) {
  * @returns {Promise} Promise representing an array of all note objects
  */
 async function readAll() {
-  /* todo útfæra */
+  const query = 'SELECT * FROM Notes;';
+  const params = [];
+  let results = await db.runSQL(query, params);
+  return results;
 }
 
 /**
@@ -33,7 +37,10 @@ async function readAll() {
  * @returns {Promise} Promise representing the note object or null if not found
  */
 async function readOne(id) {
-  /* todo útfæra */
+  const query = 'SELECT * FROM Notes WHERE id=$1::serial;';
+  const params = [ id ];
+  let results = await db.runSQL(query, params);
+  return results;
 }
 
 /**

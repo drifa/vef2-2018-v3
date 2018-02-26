@@ -1,5 +1,4 @@
 const express = require('express');
-const db = require('./createdb');
 
 const {
   create,
@@ -13,13 +12,20 @@ const router = express.Router();
 
 router.get('/', async (req, res) => {
   try {
-    await db.query("INSERT INTO Notes(datetime, title, text) VALUES(now(), 'Yo', 'What is kicking');");
-    let result = await db.query('SELECT * FROM Notes;')
+    let result = await readAll();
     res.send(result);
   } catch (err) {
     res.send(err);
   }
+});
 
+router.get('/:id', async (req, res) => {
+  try {
+    let result = await readOne(req.params.id);
+    res.send(result);
+  } catch (err) {
+    res.send(err);
+  }
 });
 
 function catchErrors(fn) {
