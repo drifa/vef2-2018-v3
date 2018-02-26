@@ -1,14 +1,6 @@
 const express = require('express');
 const db = require('./createdb');
 
-let bla = "";
-db.create().catch((err) => {
-  bla = "ERROR: " + err
-  console.error('Error creating schema', err);
-});
-
-db.query("INSERT INTO Notes(datetime, title, text) VALUES(CURRENT_TIMESTAMP, 'Yo', 'What's kicking')");
-
 const {
   create,
   readAll,
@@ -20,8 +12,9 @@ const {
 const router = express.Router();
 
 router.get('/', async (req, res) => {
+  await db.query("INSERT INTO Notes(datetime, title, text) VALUES(CURRENT_TIMESTAMP, 'Yo', 'What's kicking')");
   let result = await db.query('SELECT * FROM Notes;')
-  res.send('' + bla + '\n' + result);
+  res.send(result);
 });
 
 function catchErrors(fn) {
