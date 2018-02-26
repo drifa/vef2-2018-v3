@@ -13,7 +13,7 @@ const router = express.Router();
 
 router.get('/', async (req, res) => {
   try {
-    await db.query("INSERT INTO Notes(datetime, title, text) VALUES(CURRENT_TIMESTAMP, 'Yo', 'What's kicking')");
+    await db.query("INSERT INTO Notes(datetime, title, text) VALUES(CURRENT_TIMESTAMP, 'Yo', 'What's kicking');");
     let result = await db.query('SELECT * FROM Notes;')
     res.send(result);
   } catch (err) {
