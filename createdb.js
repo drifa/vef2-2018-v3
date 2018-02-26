@@ -11,7 +11,7 @@ const readFileAsync = util.promisify(fs.readFile);
 
 const schemaFile = './schema.sql';
 
-async function query(q) {
+exports.query = async function query(q) {
   const client = new Client({ connectionString });
 
   await client.connect();
