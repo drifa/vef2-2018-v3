@@ -15,7 +15,7 @@ router.get('/', async (req, res) => {
     let result = await readAll();
     res.send(result);
   } catch (err) {
-    res.send(err);
+    res.send("ERROR: " + err);
   }
 });
 
