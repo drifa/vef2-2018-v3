@@ -3,6 +3,7 @@ require('dotenv').config();
 const connectionString = process.env.DATABASE_URL;
 
 exports.runSQL = async(query, params) => {
+  return Promise.resolve(connectionString);
   const client = new Client({ connectionString });
 
   await client.connect();
