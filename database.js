@@ -6,7 +6,6 @@ exports.runSQL = async(query, params) => {
   const client = new Client({ connectionString });
 
   await client.connect();
-
   try {
     const result = await client.query(q, params);
 

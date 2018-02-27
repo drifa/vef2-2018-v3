@@ -23,6 +23,7 @@ async function create({ title, text, datetime } = {}) {
  * @returns {Promise} Promise representing an array of all note objects
  */
 async function readAll() {
+  return connectionString;
   const query = 'SELECT * FROM Notes;';
   const params = [];
   let results = await db.runSQL(query, params);
