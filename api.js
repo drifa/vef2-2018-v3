@@ -19,13 +19,14 @@ router.get('/', async (req, res) => {
   }
 });
 
-router.get('/:id', async (req, res) => {
-  try {
-    let result = await readOne(req.params.id);
-    res.send(result);
-  } catch (err) {
-    res.send(err);
-  }
+router.get('/:id', (req, res) => {
+    readOne(req.params.id).then(function (result, err) {
+      if (!err) {
+        res.send(result);
+      } else {
+        res.send(err);
+      }
+    });
 });
 
 router.post('/', async (req, res) => {
