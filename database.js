@@ -8,7 +8,7 @@ exports.runSQL = async(query, params) => {
   await client.connect();
   try {
     const result = await client.query(query, params);
-    return result.rows;
+    return result
   } catch (err) {
     throw err;
   } finally {
