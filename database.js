@@ -7,7 +7,8 @@ exports.runSQL = async(query, params) => {
 
   const query = {
     text: query,
-    values: params
+    values: params,
+    rowMode: 'array'
   };
 
   await client.connect();
