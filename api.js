@@ -28,6 +28,10 @@ router.get('/:id', async (req, res) => {
   }
 });
 
+router.post('/', async (req, res) => {
+
+});
+
 function catchErrors(fn) {
   return (req, res, next) => fn(req, res, next).catch(next);
 }

@@ -1,4 +1,6 @@
-const db = require('./database');
+const {
+  runSQL
+} = require('./database');
 
 /**
  * Create a note asynchronously.
@@ -13,7 +15,7 @@ const db = require('./database');
 async function create({ title, text, datetime } = {}) {
   const query = 'INSERT INTO Notes(datetime, title, text) VALUES($1::timestamp, $2::string, $3::string);';
   const params = [ datetime, title, text ];
-  let results = await db.runSQL(query, params);
+  let results = await runSQL(query, params);
   return results;
 }
 
@@ -25,7 +27,7 @@ async function create({ title, text, datetime } = {}) {
 async function readAll() {
   const query = 'SELECT * FROM Notes;';
   const params = [];
-  let results = await db.runSQL(query, params);
+  let results = await runSQL(query, params);
   return results;
 }
 
@@ -37,7 +39,7 @@ async function readAll() {
  * @returns {Promise} Promise representing the note object or null if not found
  */
 async function readOne(id) {
-  const query = 'SELECT * FROM Notes WHERE id=$1::serial;';
+  const query = 'SELECT * FROM Notes WHERE id=$1::int;';
   const params = [ id ];
   let results = await db.runSQL(query, params);
   return results;
