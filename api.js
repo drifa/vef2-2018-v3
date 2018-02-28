@@ -21,7 +21,7 @@ router.get('/', async (req, res) => {
 
 router.get('/:id', async (req, res) => {
   try {
-    let result = await readOne(parseInt(req.params.id));
+    let result = await readOne(req.params.id);
     res.send(result);
   } catch (err) {
     res.send(err);
