@@ -21,6 +21,8 @@ router.get('/', async (req, res) => {
 
 router.get('/:id', async (req, res) => {
   try {
+    let type = typeof req.params.id
+    res.send('Type: ' + type + '\nValue: ' + req.params.id);
     let result = await readOne(req.params.id);
     res.send(result);
   } catch (err) {
