@@ -1,18 +1,18 @@
 require('dotenv').config();
 const { Client } = require('pg');
-const connectionString = process.env.DATABASE_URL// + '?ssh=true';
+const connectionString = process.env.DATABASE_URL + '?ssh=true';
 
-exports.runSQL = async(queryString, params, callback) => {
+exports.runSQL = async(query, params) => {
   const client = new Client({ connectionString });
 
-  const query = {
-    text: queryString,
-    values: params,
-  };
-
   await client.connect();
-  client.query(query, (err, res) => {
-    callback(err, res)
+  try {
+    const result = await client.query(query, params);
+    const { rows } = result;
+    return rows;
+  } catch (err) {
+    throw err;
+  } finally {
     await client.end();
-  });
+  }
 }
