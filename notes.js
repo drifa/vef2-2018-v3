@@ -41,8 +41,7 @@ async function readAll() {
 async function readOne(id, callback) {
   const query = 'SELECT * FROM Notes WHERE id=$1::int;';
   const params = [ id ];
-  let results = db.runSQL(query, params, callback);
-  return results;
+  db.runSQL(query, params, callback);
 }
 
 /**
