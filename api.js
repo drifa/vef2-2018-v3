@@ -20,12 +20,10 @@ router.get('/', async (req, res) => {
 });
 
 router.get('/:id', (req, res) => {
-    readOne(req.params.id).then(function (result, err) {
-      if (!err) {
-        res.send(result);
-      } else {
-        res.send(err);
-      }
+    readOne(req.params.id).then(result => {
+      res.send(result);
+    }).catch(err => {
+      res.send(err);
     });
 });
 
