@@ -1,7 +1,17 @@
 const {
-  runSQL
+  runSQL,
 } = require('./database');
 
+const {
+  validation,
+} = require('./validator');
+
+function makeError(error, code) {
+  return {
+    error,
+    code,
+  };
+}
 /**
  * Create a note asynchronously.
  *
@@ -13,10 +23,23 @@ const {
  * @returns {Promise} Promise representing the object result of creating the note
  */
 async function create({ title, text, datetime } = {}) {
-  const query = 'INSERT INTO Notes(datetime, title, text) VALUES($1::timestamp, $2::string, $3::string);';
-  const params = [ datetime, title, text ];
-  let results = await runSQL(query, params);
-  return results;
+  if (validation(title, text, datetime).length > 0) {
+    return makeError(validation(title, text, datetime), 400);
+  }
+  const query = 'INSERT INTO Notes(title, text, datetime) VALUES($1, $2, $3::timestamp) returning id;';
+  const params = [title, text, datetime];
+
+  try {
+    const results = await runSQL(query, params);
+    return {
+      id: results[0].id,
+      title,
+      text,
+      datetime,
+    };
+  } catch (error) {
+    return makeError({ error: error.message }, 400);
+  }
 }
 
 /**
@@ -27,7 +50,7 @@ async function create({ title, text, datetime } = {}) {
 async function readAll() {
   const query = 'SELECT * FROM Notes;';
   const params = [];
-  let results = await runSQL(query, params);
+  const results = await runSQL(query, params);
   return results;
 }
 
@@ -39,10 +62,20 @@ async function readAll() {
  * @returns {Promise} Promise representing the note object or null if not found
  */
 async function readOne(id) {
+  if (Number.isNaN(parseInt(id, 10))) {
+    return makeError({ error: 'Note not found' }, 404);
+  }
   const query = 'SELECT * FROM Notes WHERE id=$1;';
-  const params = [ id ];
-  let results = await runSQL(query, params);
-  return results;
+  const params = [id];
+  try {
+    const results = await runSQL(query, params);
+    if (results.length > 0) {
+      return results[0];
+    }
+    return makeError({ error: 'Note not found' }, 404);
+  } catch (error) {
+    return makeError({ error: error.message }, 400);
+  }
 }
 
 /**
@@ -57,7 +90,25 @@ async function readOne(id) {
  * @returns {Promise} Promise representing the object result of creating the note
  */
 async function update(id, { title, text, datetime } = {}) {
-  /* todo útfæra */
+  if (Number.isNaN(parseInt(id, 10))) {
+    return makeError({ error: 'Invalid id' }, 400);
+  }
+  if (validation(title, text, datetime).length > 0) {
+    return makeError(validation(title, text, datetime), 400);
+  }
+  const query = 'UPDATE Notes SET title = $1, text = $2, datetime = $3::timestamp WHERE id = $4 returning id;';
+  const params = [title, text, datetime, id];
+  try {
+    const results = await runSQL(query, params);
+    return {
+      id: results[0].id,
+      title,
+      text,
+      datetime,
+    };
+  } catch (error) {
+    return makeError({ error: error.message }, 400);
+  }
 }
 
 /**
@@ -68,7 +119,14 @@ async function update(id, { title, text, datetime } = {}) {
  * @returns {Promise} Promise representing the boolean result of creating the note
  */
 async function del(id) {
-  /* todo útfæra */
+  const query = 'DELETE FROM Notes WHERE id=$1;';
+  const params = [id];
+  try {
+    await runSQL(query, params);
+    return 200;
+  } catch (e) {
+    return 404;
+  }
 }
 
 module.exports = {

@@ -11,7 +11,7 @@ const readFileAsync = util.promisify(fs.readFile);
 
 const schemaFile = './schema.sql';
 
-exports.query = async function query(q) {
+async function query(q) {
   const client = new Client({ connectionString });
 
   await client.connect();
@@ -29,10 +29,14 @@ exports.query = async function query(q) {
   }
 }
 
-exports.create = async function create() {
+async function create() {
   const data = await readFileAsync(schemaFile);
 
   await query(data.toString('utf-8'));
 
   console.info('Schema created');
 }
+
+create().catch((err) => {
+  console.error('Error creating schema', err);
+});
